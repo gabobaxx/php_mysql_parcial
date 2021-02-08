@@ -4,8 +4,9 @@ include("db.php");
 // Archivo de configuracion
 include('includes/config.php');
 
-$error_msg = 'Contacto no eliminado';
-$success_msg = 'Contacto eliminado satisfactoriamente';
+
+$error_msg = 'ERROR: Objeto no eliminado';
+$success_msg = 'SUCCESS: Objeto eliminado satisfactoriamente';
 $color = 'danger';
 
 if(isset($_GET['id'])) {
@@ -15,13 +16,13 @@ if(isset($_GET['id'])) {
   $result = mysqli_query($conn, $query);
   // Algo ha fallado
   if(!$result) {
-    // $_SESSION['message'] = $error_msg;
-    // $_SESSION['message_type'] = $color;
+    $_SESSION['message'] = $error_msg;
+    $_SESSION['message_type'] = $color;
     header('Location: index.php');
   }
   // Mensajes de alerta
-//   $_SESSION['message'] = $success_msg;
-//   $_SESSION['message_type'] = $color;
+  $_SESSION['message'] = $success_msg;
+  $_SESSION['message_type'] = $color;
   // Redireccion a inicio
   header('Location: index.php');
 }
