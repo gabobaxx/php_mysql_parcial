@@ -5,8 +5,8 @@ include("db.php");
 include('includes/config.php');
 
 
-$error_msg = 'ERROR: Objeto no eliminado';
-$success_msg = 'SUCCESS: Objeto eliminado satisfactoriamente';
+$error_msg = 'ERROR: Producto no eliminado';
+$success_msg = 'SUCCESS: Producto eliminado satisfactoriamente';
 $color = 'danger';
 
 if(isset($_GET['id'])) {
