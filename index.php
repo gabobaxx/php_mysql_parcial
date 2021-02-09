@@ -5,10 +5,6 @@
 <!-- Cabecera -->
 <?php include('includes/header.php'); ?>
 
-<?php 
-  $query = "SELECT * FROM $table";
-  $resultados = mysqli_query($conn, $query);    				
-?>
 
 <!-- HTML -->
 <main class="container">
@@ -31,40 +27,69 @@
               <form action="save.php" method="POST">
                 <!-- PRIMER INPUT -->
                   <div class="mb-3">
-                    <label for="size" class="form-label">
-                      Tamaño de Bolsa:
+                    <label for="name" class="form-label">
+                      <strong>*</strong>Nombre del Producto
                     </label>
-                    <input type="number" name="bolsa_size" id="size" class="form-control"  placeholder="Solo numeros enteros">
+                    <input type="text" name="product_name"  id="name" class="form-control"  placeholder="Maximo 20 caracteres" maxlength="20" autofocus required>
                   </div>
                 <!-- SEGUNDO INPUT -->
                   <div class="mb-3">
-                    <label for="unit"class="form-label">Cantidad Entrante (unidad):</label>
-                    <input type="number" name="units" id="unit" class="form-control"  placeholder="Solo numeros enteros">
+                    <label for="brand" class="form-label">
+                      <strong>*</strong>Marca del Producto
+                    </label>
+                    <input type="text" name="product_brand"  id="brand" class="form-control"  placeholder="Maximo 50 caracteres" maxlength="50" required>
                   </div>
                 <!-- TERCER INPUT -->
                   <div class="mb-3">
-                    <label for="price" class="form-label">Precio:</label>
-                    <input type="number" name="price" id="price" class="form-control"  placeholder="Precio por docena" step="any">
+                    <label for="size" class="form-label">
+                      Contenido Neto
+                    </label>
+                    <input type="number" name="product_size"  id="size" class="form-control" placeholder="Solo enteros positivos" min="1">
                   </div>
                 <!-- CUARTO INPUT -->
                   <div>
                     <label class="form-label">
-                      Tipo de Bolsa:
+                      Presentación
                     </label> 
                   </div>
-                <!-- PRIMERA OPCION -->
-                  <div class="form-check mb-3">  
-                    <input class="form-check-input" type="radio" name="bolsa_type" id="plastico" value="plastico">
+                <!-- OPCIONES -->
+                  <select name="measure_unit">
+                    <option value="1">Kilogramo</option>
+                    <option value="2">Litro</option>
+                  </select>
+                  <!-- <div class="form-check mb-3">  
+                    <input class="form-check-input" type="select" name="bolsa_type" id="plastico" value="plastico">
                     <label class="form-check-label" for="plastico">
                       Plastico
                     </label>
                   </div>
                 <!-- SEGUNDA OPCION -->
-                  <div class="form-check mb-3">
+                  <!-- <div class="form-check mb-3">
                     <input class="form-check-input" type="radio" name="bolsa_type" id="papel" value="papel">
                     <label class="form-check-label" for="papel">
                       Papel
                     </label>
+                  </div> -->
+                <!-- QUINTO INPUT -->
+                  <div class="mb-3">
+                    <label for="units" class="form-label">
+                      <strong>*</strong>Cantidad Entrante (unidades)
+                    </label>
+                    <input type="number" name="units"  id="units" class="form-control" placeholder="Solo enteros positivos" min="1" required>
+                  </div>
+                <!-- SEXTO INPUT -->
+                  <div class="mb-3">
+                    <label for="price" class="form-label">
+                      <strong>*</strong>Precio de Compra
+                    </label>
+                    <input type="number" name="buy_price"  id="price" class="form-control" placeholder="Precio por unidad" min="1" step="any" required>
+                  </div>
+                <!-- SEPTIMO INPUT -->
+                  <div class="mb-3">
+                    <label for="earn" class="form-label">
+                     <strong>*</strong> Ganancia (%)
+                    </label>
+                    <input type="number" name="earn"  id="earn" class="form-control" placeholder="Porcentaje de Ganancia" min="1" step="any" required>
                   </div>
                 <!-- BOTON -->
                   <div class="form-group">
@@ -75,27 +100,60 @@
         </div>
       <!-- SEGUNDA COLUMNA -->
         <div class="col-md-5">
+          <!-- OPCIONES -->
+            <select name="filtrado">
+              <option value="product_name">Nombre del Producto</option>
+              <option value="product_brand">Marca del Producto</option>
+              <option value="date">Fecha de Ingreso</option>
+            </select>
+          <!-- BOTON -->
+            <div class="form-group">
+              <input type="submit" name="filtrar" class="btn btn-success btn-block" value="Buscar">
+            </div>
           <!-- TABLA -->
             <table class="table table-bordered">
               <!-- CABECERA DE LA TABLA -->
                 <thead>
                   <tr class="text-center">
-                    <!-- <th>Bolsas de Plastico</th>
-                    <th>Bolsas de Papel</th>
-                    <th>Bolsas Totales</th>
-                    <th>Valo del Inventario</th> -->
+                    <th>Producto</th>
+                    <th>Marca</th>
+                    <th>Contenido Neto (unidad)</th>
+                    <th>Cantidad Entrante (unidad)</th>
+                    <th>Precio de Compra (unidad)</th>
+                    <th>Porcentaje de Ganancia</th>
+                    <th>Precio Total (unidad)</th>
                   </tr>
                 </thead>
               <!-- CUERPO DE LA TABLA -->
-                <tbody>         
-                  <tr>
-                    <?php 
-                      // $query = "SELECT SUM(units) AS UNIDADES, SUM(price) AS PRICE, COUNT(1) AS REPETICIONES FROM inventario GROUP BY bolsa_type HAVING COUNT(1) >= 0";
-                      $resultados = mysqli_query($conn, $query); 
-                      while($row = mysqli_fetch_assoc($resultados)) { ?>   
-                        <!-- <td><?php //echo $row['UNIDADES']; ?></td> -->
-                    <?php }; ?>
-                  </tr>
+                <tbody> 
+                  <?php 
+                    $query = "SELECT `product_name` AS PRODUCT, `product_brand` AS BRAND, product_size AS CONTENIDO_NETO, measure_unit AS PRESENTACION, units AS UNITS, buy_price AS BUY_PRICE, earn AS EARN, created_at AS DATE FROM inventario ORDER BY product_name";
+                    $resultados = mysqli_query($conn, $query);
+                    $price = 0;
+                    $units = 0;
+                    $earn = 0;
+                    $IVA = 0;
+                    $total_price = 0;
+                    while($row = mysqli_fetch_assoc($resultados)) { 
+                      $price = (float)$row['BUY_PRICE']* (int)$row['UNITS'];
+                      $earn = $row['EARN']; 
+                      $total_price = $price + ($price * $earn) / 100 ;
+                      $IVA = $total_price * 0.16;
+                      $total_price = $total_price + $IVA; ?>
+                      <tr>
+                        <td> <?php echo $row['PRODUCT']; ?> </td>
+                        <td> <?php echo $row['BRAND']; ?> </td>
+                        <td> <?php echo $row['CONTENIDO_NETO'], $row['PRESENTACION']; ?> </td>
+                        <?php if( (int)$row['UNITS'] > 1){ ?>
+                            <td> <?php echo $row['UNITS'];?> unidades</td>
+                        <?php }else{ ?>
+                            <td> <?php echo $row['UNITS'];?> unidad</td> 
+                        <?php }; ?>
+                        <td> <?php echo $row['BUY_PRICE'];?>$</td>
+                        <td> <?php echo $row['EARN'];?>%</td>
+                        <td> <?php echo $total_price ?>$</td>
+                      </tr>
+                  <?php }; ?>        
                 </tbody>
             </table>
           <!-- ICONO 1 -->
@@ -111,146 +169,6 @@
               <i class="bi bi-arrow-left-circle-fill"></i>
             </h3>    
         </div>
-    </div>
-  <!-- TABLAS -->
-    <div class="row mt-10">    
-      <!-- TABLA 1 -->
-        <div class="pt-4">
-          <!-- TITULO -->
-            <h2 id="t1">
-              <!-- <i class="bi bi-handbag-fill"></i>
-              Bolsas Totales -->
-            </h2>
-            <table class="table table-bordered">
-              <caption class="text-danger">
-                <!-- Cantidad de bolsas totales: <?php echo $int;?> -->
-              </caption>
-              <!-- CABECERA DE LA TABLA -->
-                <thead>
-                  <tr>
-                    <!-- <th>ID</th>
-                    <th>Tipo de Bolsa</th>
-                    <th>Tamaño de Bolsa (litros)</th>
-                    <th>Unidades</th>
-                    <th>Precio por Docena</th>
-                    <th>Agregado</th>
-                    <th>Acción</th> -->
-                  </tr>
-                </thead>
-              <!-- CUERPO DE LA TABLA -->
-                <tbody>
-                  <?php
-                    $query = "SELECT * FROM $table";
-                    $resultados = mysqli_query($conn, $query); 
-                    while($row = mysqli_fetch_assoc($resultados)) { ?>       
-                    <tr>  
-                        <!-- <td><?php echo $row['id']; ?></td>
-                        <td><?php echo $row['bolsa_type']; ?></td>
-                        <td><?php echo $row['bolsa_size']; ?> L</td>
-                        <td><?php echo $row['units']; ?></td>
-                        <td><?php echo $row['price']; ?> $</td>
-                        <td><?php echo $row['added_at']; ?></td> -->
-                      
-                      <!-- ICONOS -->
-                        <td>
-                          <a href="edit.php?id=<?php echo $row['id']?>" class="btn btn-primary"><i class="bi bi-pencil-fill"></i></a> 
-                          <br> <br>
-                          <a href="delete.php?id=<?php echo $row['id']?>" class="btn btn-danger">
-                            <i class="bi bi-trash-fill"></i>
-                          </a>
-                        </td>
-                      
-                  
-                    </tr>
-                  <?php } ?>
-                </tbody>
-            </table>
-        </div>
-      <!-- TABLA 2 -->
-        <div class="pt-4">
-          <!-- TITULO -->
-          <h2 id="t2">
-            <!-- <i class="bi bi-handbag-fill"></i>
-            Bolsas Por Tipo -->
-          </h2>
-          <table class="table table-bordered">
-            <caption class="text-danger">
-              <!-- Cantidad de bolsas por tipo -->
-            </caption>
-            <thead>
-              <tr>
-                <!-- <th>Tipo</th>
-                <th>Plastico</th>
-                <th>Papel</th>
-                <th>Total</th> -->
-              </tr>
-            </thead>
-            <tbody>  
-              <tr>
-                  <!-- <th>Cantidad</th> -->
-                <?php 
-                  // $query = "SELECT SUM(units) AS UNIDADES, SUM(price) AS PRICE, COUNT(1) AS REPETICIONES FROM inventario GROUP BY bolsa_type HAVING COUNT(1) >= 0";
-                  $resultados = mysqli_query($conn, $query); 
-                  while($row = mysqli_fetch_assoc($resultados)) { ?>   
-                    <td><?php //echo $row['UNIDADES']; ?></td>
-                <?php }; ?>
-                  <td><?php echo $total; ?></td>
-              </tr>
-              <tr>
-                  <!-- <th>Valor</th> -->
-                <?php 
-                  // $query = "SELECT SUM(price) AS PRICE, COUNT(1) AS REPETICIONES FROM inventario GROUP BY bolsa_type HAVING COUNT(1) >= 0";
-                  $resultados = mysqli_query($conn, $query); 
-                  while($row = mysqli_fetch_assoc($resultados)) { ?>   
-                    <td><?php //echo $row['PRICE']; ?>$</td> 
-                <?php }; ?>
-              </tr>
-            </tbody>
-          </table>        
-        </div>
-      <!-- TABLA 3 -->
-        <div class="pt-4">
-          <h2 id="hsize">
-            <!-- <i class="bi bi-handbag-fill"></i>
-            Bolsas Por Tamaño -->
-          </h2>
-          <table class="table table-bordered">
-          <caption class="text-danger">
-            <!-- Cantidad de bolsas por tamaño -->
-          </caption>
-          <thead>
-              <tr>
-                <!-- <th>Tamaño</th> -->
-                <?php 
-                  // $query = "SELECT bolsa_size AS VALOR, COUNT(1) AS REPETICIONES FROM $table GROUP BY bolsa_size HAVING COUNT(1) >= 0";
-                  $resultados = mysqli_query($conn, $query); 
-                  while($row = mysqli_fetch_assoc($resultados)) { ?>          
-                    <th><?php //echo $row['VALOR'];?>L</th>
-                <?php }; ?>
-              </tr>
-            </thead>
-            <tbody>
-                <tr>
-                  <!-- <th>Cantidad</th> -->
-                  <?php 
-                    // $query = "SELECT SUM(units) AS UNIDADES, COUNT(1) AS REPETICIONES FROM $table GROUP BY bolsa_size HAVING COUNT(1) >= 0";
-                    $resultados = mysqli_query($conn, $query); 
-                    while($row = mysqli_fetch_assoc($resultados)) { ?>   
-                      <td><?php //echo $row['UNIDADES']; ?></td>
-                  <?php }; ?>
-                </tr>
-                <tr>
-                  <!-- <th>Valor</th> -->
-                  <?php 
-                    // $query = "SELECT SUM(price) AS PRICE, COUNT(1) AS REPETICIONES FROM $table GROUP BY bolsa_size HAVING COUNT(1) >= 0";
-                    $resultados = mysqli_query($conn, $query); 
-                    while($row = mysqli_fetch_assoc($resultados)) { ?>   
-                      <td><?php //echo $row['PRICE']; ?>$</td>
-                  <?php }; ?>
-                </tr>
-            </tbody>
-          </table>        
-        </div>     
     </div>
 </main>
 

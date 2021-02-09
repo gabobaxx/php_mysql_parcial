@@ -4,18 +4,21 @@ include('db.php');
 // Archivo de configuracion
 include('includes/config.php');
 
-$error_msg = 'ERROR: Objeto no guardado';
-$success_msg = 'Objeto guardado satisfactoriamente';
+$error_msg = 'ERROR: Producto no guardado';
+$success_msg = 'Producto guardado satisfactoriamente';
 $color = 'danger';
 
 if (isset($_POST['save'])) {
 
-    // $bolsa_type = $_POST['bolsa_type'];
-    // $bolsa_size = $_POST['bolsa_size'];
-    // (int)$units = $_POST['units'];
-    // (int)$price = $_POST['price'];
+  $product_name   = $_POST['product_name'];
+  $product_brand  = $_POST['product_brand'];
+  $product_size   = $_POST['product_size'];  // Contenido Neto 
+  $measure_unit   = $_POST['measure_unit']; // Unidades de medida (KG o L)
+  $units          = $_POST['units'];
+  $buy_price      = $_POST['buy_price'];
+  $earn           = $_POST['earn'];
 
-  // $query = "INSERT INTO $table(bolsa_type, bolsa_size, units, price) VALUES ('$bolsa_type', '$bolsa_size', '$units', '$price')";
+  $query = "INSERT INTO $table(product_name, product_brand, product_size, measure_unit, units, buy_price, earn) VALUES ('$product_name', '$product_brand', '$product_size', '$measure_unit', '$units', '$buy_price', '$earn')";
   $result = mysqli_query($conn, $query);
   
   // Algo fallo
