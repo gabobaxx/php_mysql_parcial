@@ -9,5 +9,4 @@ $conn = mysqli_connect(
   $clave,
   $db
 ) or die(mysqli_erro($mysqli));
-
 ?>
