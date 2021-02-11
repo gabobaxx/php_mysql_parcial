@@ -70,63 +70,40 @@
         <form action="edit.php?id=<?php echo $_GET['id']; ?>" method="POST">
           <!-- PRIMER INPUT -->
             <div class="mb-3">
-              <label for="name" class="form-label">
-                <strong>*</strong>Nombre del Producto
-              </label>
               <input type="text" name="product_name"  id="name" class="form-control"  placeholder="Maximo 20 caracteres" value="<?php echo $product_name ?>" maxlength="20" autofocus required>
             </div>
           <!-- SEGUNDO INPUT -->
             <div class="mb-3">
-              <label for="brand" class="form-label">
-                <strong>*</strong>Marca del Producto
-              </label>
               <input type="text" name="product_brand"  id="brand" class="form-control"  placeholder="Maximo 50 caracteres" value="<?php echo $product_brand ?>" maxlength="50" required>
             </div>
           <!-- TERCER INPUT -->
             <div class="mb-3">
-              <label for="size" class="form-label">
-                Contenido Neto
-              </label>
-              <input type="number" name="product_size"  id="size" class="form-control" placeholder="Solo enteros positivos" min="1" 
+              <input type="number" name="product_size"  id="size" class="form-control" placeholder="Contenido Neto" step="any" 
               value="<?php echo $product_size ?>" >
             </div>
           <!-- CUARTO INPUT -->
-            <div>
-              <label class="form-label">
-                Presentación
-              </label> 
-            </div>
           <!-- OPCIONES -->
             <?php if($measure_unit == "KG"){ ?>
-              <select name="measure_unit">
+              <select name="measure_unit" class="form-select">
                 <option value="1" selected>Kilogramo</option>
                 <option value="2">Litro</option>
               </select>
             <?php }else{ ?>
-              <select name="measure_unit">
+              <select name="measure_unit" class="form-select">
                 <option value="1" >Kilogramo</option>
                 <option value="2" selected>Litro</option>
               </select>
             <?php }; ?>
           <!-- QUINTO INPUT -->
             <div class="mb-3">
-              <label for="units" class="form-label">
-                <strong>*</strong>Cantidad Entrante (unidades)
-              </label>
-              <input type="number" name="units"  id="units" class="form-control" placeholder="Solo enteros positivos" value="<?php echo $units ?>"  min="1" required>
+              <input type="number" name="units"  id="units" class="form-control" placeholder="Cantidad Entrante (unidades)" value="<?php echo $units ?>"  min="1" required>
             </div>
           <!-- SEXTO INPUT -->
             <div class="mb-3">
-              <label for="price" class="form-label">
-                <strong>*</strong>Precio de Compra
-              </label>
-              <input type="number" name="buy_price"  id="price" class="form-control" placeholder="Precio por unidad" value="<?php echo $buy_price ?>"  min="1" step="any" required>
+              <input type="number" name="buy_price"  id="price" class="form-control" placeholder="Precio por unidad" value="<?php echo $buy_price ?>" step="any" required>
             </div>
           <!-- SEPTIMO INPUT -->
             <div class="mb-3">
-              <label for="earn" class="form-label">
-                <strong>*</strong> Ganancia (%)
-              </label>
               <input type="number" name="earn"  id="earn" class="form-control" placeholder="Porcentaje de Ganancia" value="<?php echo $earn ?>"  min="1" step="any" required>
             </div>
           <!-- BOTON -->
