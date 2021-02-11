@@ -78,7 +78,18 @@
                     $earn = 0;
                     $IVA = 0;
                     $total_price = 0;
-                    while($row = mysqli_fetch_assoc($resultados)) { 
+                    $len = mysqli_num_rows($resultados);
+                    
+                    if($len == 0){?>
+                       <h3 class="mt-5 text-danger text-center">
+                          NO HAY DATOS AUN,
+                          AGREGA ALGUNOS.
+                        </h3>
+                        <h3 class="mt-5 text-danger text-center">
+                          <i class="bi bi-arrow-left-circle-fill"></i>
+                        </h3>
+                    <?php }else{ 
+                      while($row = mysqli_fetch_assoc($resultados)) { 
                       $price = (float)$row['BUY_PRICE']* (int)$row['UNITS'];
                       $earn = $row['EARN']; 
                       $total_price = $price + ($price * $earn) / 100 ;
@@ -91,6 +102,7 @@
                         <td> <?php echo $row['CONTENIDO_NETO'], $row['PRESENTACION']; ?> </td>
                         <td> <?php echo $total_price  / (int)$row['UNITS']?> $</td>
                       </tr>
+                    <?php };?>
                   <?php }; ?>        
                 </tbody>
             </table>  
